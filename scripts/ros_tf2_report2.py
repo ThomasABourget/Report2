@@ -9,7 +9,7 @@ from robot_vision_lectures.msg import SphereParams
 
 if __name__ == '__main__':
 	# initialize the node
-	rospy.init_node('ros_tf_example', anonymous = True)
+	rospy.init_node('ros_tf_report2', anonymous = True)
 	# add a ros transform listener
 	 # Add a subscriber to read the estimated ball position
 	# Global variables to store the estimated ball position
@@ -51,10 +51,6 @@ if __name__ == '__main__':
 		# extract the quaternion and converto RPY
 		q_rot = trans.transform.rotation
 		roll, pitch, yaw, = euler_from_quaternion([q_rot.x, q_rot.y, q_rot.z, q_rot.w])
-		# a quick check of the readings
-		print('Tool frame position and orientation w.r.t base: x= ', format(x, '.3f'), '(m),  y= ', format(y, '.3f'), '(m), z= ', format(z, '.3f'),'(m)')
-		print('roll= ', format(roll, '.2f'), '(rad), pitch= ', format(pitch, '.2f'), '(rad), yaw: ', format(yaw, '.2f'),'(rad)') 
-		# define a testpoint in the tool frame (let's say 10 cm away from flange)
 		pt_in_tool = tf2_geometry_msgs.PointStamped()
 		pt_in_tool.header.frame_id = 'fk_tooltip'
 		pt_in_tool.header.stamp = rospy.get_rostime()
