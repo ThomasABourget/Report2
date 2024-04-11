@@ -57,12 +57,12 @@ if __name__ == '__main__':
 	plan_point4 = Twist()
 	# just a quick solution to send two target points
 	# define a point close to the initial position
-	plan_point4.linear.x = -0.6893
-	plan_point4.linear.y = -0.5008
-	plan_point4.linear.z = 0.344
-	plan_point4.angular.x = 1.57
-	plan_point4.angular.y = 0.0
-	plan_point4.angular.z = 0.0
+	plan_point2.linear.x = -0.693
+	plan_point2.linear.y = -0.388
+	plan_point2.linear.z = 0.363
+	plan_point2.angular.x = 1.57
+	plan_point2.angular.y = 0.0
+	plan_point2.angular.z = 0.0
 	# add this point to the plan
 	plan.points.append(plan_point4)
 	
