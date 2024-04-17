@@ -13,6 +13,21 @@ if __name__ == '__main__':
 	plan_pub = rospy.Publisher('/plan', Plan, queue_size = 10)
 	# set a 10Hz frequency for this loop
 	loop_rate = rospy.Rate(10)
+	# try getting the most update transformation between the tool frame and the base frame
+		try:
+			trans = tfBuffer.lookup_transform("base", "fk_tooltip", rospy.Time())
+		except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
+			print('Frames not available!!!')
+			loop_rate.sleep()
+			continue
+	
+	pt_in_tool = tf2_geometry_msgs.PointStamped()
+	pt_in_tool.header.frame_id = 'fk_tooltip'
+	pt_in_tool.header.stamp = rospy.get_rostime()
+	pt_in_tool.point.z= 0.1 # 10 cm away from flange
+	
+
+
 
 	# define a plan variable
 	plan = Plan()
