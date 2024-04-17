@@ -7,6 +7,8 @@ from sensor_msgs.msg import JointState
 from trajectory_msgs.msg import JointTrajectory
 from trajectory_msgs.msg import JointTrajectoryPoint
 from std_msgs.msg import Header
+import tf2_geometry_msgs
+from robot_vision_lectures.msg import XYZarray, SphereParams
 
 
 if __name__ == '__main__':
@@ -15,8 +17,30 @@ if __name__ == '__main__':
 	# add a publisher for sending joint position commands
 	pos_pub = rospy.Publisher('/pos_joint_traj_controller/command', JointTrajectory, queue_size = 10)
 	# set a 10Hz frequency for this loop
+	tfBuffer = tf2_ros.Buffer()
+	listener = tf2_ros.TransformListener(tfBuffer)
 	loop_rate = rospy.Rate(10)
+	# try getting the most update transformation between the tool frame and the base frame
+		try:
+			trans = tfBuffer.lookup_transform("base", "camera_color_optical_frame", rospy.Time())
+		except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
+			print('Frames not available!!!')
+			loop_rate.sleep()
+			continue
+	
+	sphere_params_msg = SphereParams()
+	pt_in_tool = tf2_geometry_msgs.PointStamped()
+	pt_in_tool.header.frame_id = 'camera_color_optical_frame'
+	pt_in_tool.header.stamp = rospy.get_rostime()
+	pt_in_tool.point.z = sphere_params_msg.zc # 10 cm away from flange
+	pt_in_tool.point.x = sphere_params_msg.xc
+	pt_in_tool.point.y = sphere_params_msg.zc
 
+	pt_in_base = tfBuffer.transform(pt_in_tool,'base', rospy.Duration(1.0))
+		print('Test point in the TOOL frame:  x= ', format(pt_in_tool.point.x, '.3f'), '(m), y= ', format(pt_in_tool.point.y, '.3f'), '(m), z= ', format(pt_in_tool.point.z, '.3f'),'(m)')
+		print('Transformed point in the BASE frame:  x= ', format(pt_in_base.point.x, '.3f'), '(m), y= ', format(pt_in_base.point.y, '.3f'), '(m), z= ', format(pt_in_base.point.z, '.3f'),'(m)')
+		print('-------------------------------------------------')
+	
 	# define a joint trajectory variable for sending the control commands
 	pos_cmd = JointTrajectory()
 	pos_cmd_point = JointTrajectoryPoint()
