@@ -31,6 +31,7 @@ if __name__ == '__main__':
 	pt_in_tool.point.z= 0.1 # 10 cm away from flange
 	
 
+	sphere_params_msg = SphereParams()
 
 
 	# define a plan variable
@@ -49,9 +50,9 @@ if __name__ == '__main__':
 	
 	plan_point2 = Twist()
 	# define a point away from the initial position
-	plan_point2.linear.x = -0.731
-	plan_point2.linear.y = -0.331
-	plan_point2.linear.z = 0.0764
+	plan_point2.linear.x = sphere_params_msg.xc
+	plan_point2.linear.y = sphere_params_msg.yc
+	plan_point2.linear.z = sphere_params_msg.zc
 	plan_point2.angular.x = 1.57
 	plan_point2.angular.y = 0.0
 	plan_point2.angular.z = 0.0
